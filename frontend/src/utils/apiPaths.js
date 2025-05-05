@@ -16,7 +16,7 @@ export const API_PATHS = {
         UPLOAD_IMAGES: (id) => `/api/resume/${id}/upload-images` // PUT - Upload Thumbnail and resume profile images
     },
 
-    IMAGES: {
+    IMAGE: {
         UPLOAD_IMAGE: '/api/auth/upload-image'
     }
 }
