@@ -5,8 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Dashboard from "./pages/Home/Dashboard";
 import EditResume from "./pages/ResumeUpdate/EditResume";
 import LandingPage from "./pages/LandingPage";
-import { UserProvider } from "./context/userContext";
-
+import UserProvider from "./context/userContext";
 
 const App = () => {
   return (
@@ -18,12 +17,12 @@ const App = () => {
           <Route path="/resume/:resumeId" element={<EditResume />} />
         </Routes>
       </div>
-      <Toaster 
+      <Toaster
         roastOptions={{
           className: "",
           style: {
             fontSize: "13px",
-          }
+          },
         }}
       />
     </UserProvider>
