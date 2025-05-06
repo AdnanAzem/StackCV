@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (user) return;
 
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("token");
     if (!accessToken) {
       setLoading(false);
       return;
