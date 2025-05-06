@@ -17,6 +17,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import StepProgress from "../../components/StepProgress";
 import ProfileInfoForm from "./Forms/ProfileInfoForm";
+import ContactInfoForm from "./Forms/ContactInfoForm";
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -28,7 +29,7 @@ const EditResume = () => {
   const [baseWidth, setBaseWidth] = useState(800);
   const [openThemeSelector, setOpenThemeSelector] = useState(false);
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("profile-info");
+  const [currentPage, setCurrentPage] = useState("contact-info");
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
     title: "",
@@ -118,6 +119,13 @@ const EditResume = () => {
             onNext={validateAndNext}
           />
         );
+
+        case "contact-info":
+        return (
+          <ContactInfoForm 
+          contactInfo={resumeData?.contactInfo}
+          updateSection={(key, value) => updateSection("contactInfo", key, value)}
+          />);
 
       default:
         return null;
