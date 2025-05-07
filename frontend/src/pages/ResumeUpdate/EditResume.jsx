@@ -18,6 +18,7 @@ import { API_PATHS } from "../../utils/apiPaths";
 import StepProgress from "../../components/StepProgress";
 import ProfileInfoForm from "./Forms/ProfileInfoForm";
 import ContactInfoForm from "./Forms/ContactInfoForm";
+import WorkExperienceForm from "./Forms/WorkExperienceForm";
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -29,7 +30,7 @@ const EditResume = () => {
   const [baseWidth, setBaseWidth] = useState(800);
   const [openThemeSelector, setOpenThemeSelector] = useState(false);
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("contact-info");
+  const [currentPage, setCurrentPage] = useState("work-experience");
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
     title: "",
@@ -127,6 +128,15 @@ const EditResume = () => {
           updateSection={(key, value) => updateSection("contactInfo", key, value)}
           />);
 
+          case "work-experience":
+          return (
+            <WorkExperienceForm 
+            workExperience={resumeData?.workExperience}
+            updateArrayItem={(key, value) => updateSection("workExperience",index, key, value)}
+            addArrayItem={(newItem) => addArrayItem("workExperience", newItem)}
+            removeArrayItem={(index) => removeArrayItem("workExperience", index)}
+            />);
+
       default:
         return null;
     }
@@ -144,13 +154,44 @@ const EditResume = () => {
   };
 
   //Update array item (like workExperience[0], skills[1], etc.)
-  const updateArrayItem = (section, index, key, value) => {};
+  const updateArrayItem = (section, index, key, value) => {
+    setResumeData((prev) => {
+      const updatedArray = [...prev[section]];
+
+      if (key === null) {
+        updatedArray[index] = value; // for simple strings like in 'interests'
+      } else {
+        updatedArray[index] = {
+          ...updatedArray[index],
+          [key]: value,
+        };
+      }
+      return {
+        ...prev,
+        [section]: updatedArray,
+      };
+    });
+  };
 
   // Add item to array
-  const addArrayItem = (section, newItem) => {};
+  const addArrayItem = (section, newItem) => {
+    setResumeData((prev) => ({
+      ...prev,
+      [section]: [...prev[section], newItem],
+    }));
+  };
 
   //Remove item from array
-  const removeArrayItem = (section, index) => {};
+  const removeArrayItem = (section, index) => {
+    setResumeData((prev) => {
+      const updatedArray = [...prev[section]];
+      updatedArray.splice(index, 1);
+      return {
+        ...prev,
+        [section]: updatedArray,
+      };
+    });
+  };
 
   //Fetch resume info by ID
   const fetchResumeDetailsById = async () => {
