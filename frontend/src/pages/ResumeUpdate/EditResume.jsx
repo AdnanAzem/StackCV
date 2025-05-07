@@ -20,6 +20,7 @@ import ProfileInfoForm from "./Forms/ProfileInfoForm";
 import ContactInfoForm from "./Forms/ContactInfoForm";
 import WorkExperienceForm from "./Forms/WorkExperienceForm";
 import EducationDetailsForm from "./Forms/EducationDetailsForm";
+import SkillsInfoForm from "./Forms/SkillsInfoForm";
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -31,7 +32,7 @@ const EditResume = () => {
   const [baseWidth, setBaseWidth] = useState(800);
   const [openThemeSelector, setOpenThemeSelector] = useState(false);
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("education-info");
+  const [currentPage, setCurrentPage] = useState("skills");
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
     title: "",
@@ -122,30 +123,53 @@ const EditResume = () => {
           />
         );
 
-        case "contact-info":
+      case "contact-info":
         return (
-          <ContactInfoForm 
-          contactInfo={resumeData?.contactInfo}
-          updateSection={(key, value) => updateSection("contactInfo", key, value)}
-          />);
+          <ContactInfoForm
+            contactInfo={resumeData?.contactInfo}
+            updateSection={(key, value) =>
+              updateSection("contactInfo", key, value)
+            }
+          />
+        );
 
-          case "work-experience":
-          return (
-            <WorkExperienceForm 
+      case "work-experience":
+        return (
+          <WorkExperienceForm
             workExperience={resumeData?.workExperience}
-            updateArrayItem={(index,key, value) => updateSection("workExperience",index, key, value)}
+            updateArrayItem={(index, key, value) =>
+              updateArrayItem("workExperience", index, key, value)
+            }
             addArrayItem={(newItem) => addArrayItem("workExperience", newItem)}
-            removeArrayItem={(index) => removeArrayItem("workExperience", index)}
-            />);
+            removeArrayItem={(index) =>
+              removeArrayItem("workExperience", index)
+            }
+          />
+        );
 
-          case "education-info":
-            return (
-              <EducationDetailsForm 
-              educationInfo={resumeData?.education}
-              updateArrayItem={(index, key, value) => updateSection("education",index, key, value)}
-              addArrayItem={(newItem) => addArrayItem("education", newItem)}
-              removeArrayItem={(index) => removeArrayItem("education", index)}/>
-            );
+      case "education-info":
+        return (
+          <EducationDetailsForm
+            educationInfo={resumeData?.education}
+            updateArrayItem={(index, key, value) =>
+              updateArrayItem("education", index, key, value)
+            }
+            addArrayItem={(newItem) => addArrayItem("education", newItem)}
+            removeArrayItem={(index) => removeArrayItem("education", index)}
+          />
+        );
+        
+      case "skills":
+        return (
+          <SkillsInfoForm
+            skillsInfo={resumeData?.skills}
+            updateArrayItem={(index, key, value) =>
+              updateArrayItem("skills", index, key, value)
+            }
+            addArrayItem={(newItem) => addArrayItem("skills", newItem)}
+            removeArrayItem={(index) => removeArrayItem("skills", index)}
+          />
+        );
 
       default:
         return null;
