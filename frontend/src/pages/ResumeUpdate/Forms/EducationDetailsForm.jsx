@@ -56,7 +56,7 @@ const EducationDetailsForm = ({
             {educationInfo.length > 1 && (
               <button
                 type="button"
-                className="absolute top-3 right-3 text-sm text-red-600 hover:underline cursor-pointer"
+                className="btn-remove"
                 onClick={() => removeArrayItem(index)}
               >
                 <LuTrash2 />
@@ -66,7 +66,7 @@ const EducationDetailsForm = ({
         ))}
         <button
           type="button"
-          className="self-start flex items-center gap-2 px-4 py-2 rounded bg-purple-100 text-purple-800 text-sm font-medium hover:bg-purple-200 cursor-pointer"
+          className="btn-add"
           onClick={() =>
             addArrayItem({
               degree: "",
