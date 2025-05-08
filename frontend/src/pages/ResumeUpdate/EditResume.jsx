@@ -23,6 +23,7 @@ import EducationDetailsForm from "./Forms/EducationDetailsForm";
 import SkillsInfoForm from "./Forms/SkillsInfoForm";
 import ProjectsDetailsForm from "./Forms/ProjectsDetailsForm";
 import CertificationInfoForm from "./Forms/CertificationInfoForm";
+import AdditionalInfoForm from "./Forms/AdditionalInfoForm";
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -34,7 +35,7 @@ const EditResume = () => {
   const [baseWidth, setBaseWidth] = useState(800);
   const [openThemeSelector, setOpenThemeSelector] = useState(false);
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("certifications");
+  const [currentPage, setCurrentPage] = useState("additional-info");
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
     title: "",
@@ -107,10 +108,64 @@ const EditResume = () => {
   const validateAndNext = (e) => {};
 
   // Function to navigate to the next page
-  const goToNextStep = () => {};
+  const goToNextStep = () => {
+    const pages = [
+      "profile-info",
+      "contact-info",
+      "work-experience",
+      "education-info",
+      "skills",
+      "projects",
+      "certifications",
+      "additional-info",
+    ];
+
+    if (currentPage === "additional-info") {
+      setOpenPreviewModal(true);
+    }
+
+    const currentIndex = pages.indexOf(currentPage);
+    if (currentIndex !== -1 && currentIndex < pages.length - 1) {
+      const nextIndex = currentIndex + 1;
+      setCurrentPage(pages[nextIndex]);
+
+      // Set progress as persentage
+      const percent = Math.round((nextIndex / (pages.length-1)) * 100);
+      setProgress(percent);
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    
+  };
 
   // Function to navigate to the previous page
-  const goBack = () => {};
+  const goBack = () => {
+    const pages = [
+      "profile-info",
+      "contact-info",
+      "work-experience",
+      "education-info",
+      "skills",
+      "projects",
+      "certifications",
+      "additional-info",
+    ];
+
+    if (currentPage === "additional-info") {
+      navigate("/dashboard");
+    }
+
+    const currentIndex = pages.indexOf(currentPage);
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentPage(pages[prevIndex]);
+
+      // Update progress as persentage
+      const percent = Math.round((prevIndex / (pages.length-1)) * 100);
+      setProgress(percent);
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  };
 
   const renderForm = () => {
     switch (currentPage) {
@@ -192,6 +247,16 @@ const EditResume = () => {
             updateArrayItem={(index, key, value) => updateArrayItem("certifications", index, key, value)}
             addArrayItem={(newItem) => addArrayItem("certifications", newItem)}
             removeArrayItem={(index) => removeArrayItem("certifications", index)}/>
+          );
+
+        case "additional-info":
+          return (
+            <AdditionalInfoForm
+            languages={resumeData?.languages}
+            interests={resumeData?.interests}
+            updateArrayItem={(section,index, key, value) => updateArrayItem(section, index, key, value)}
+            addArrayItem={(section, newItem) => addArrayItem(section, newItem)}
+            removeArrayItem={(section, index) => removeArrayItem(section, index)}/>
           );
 
       default:
