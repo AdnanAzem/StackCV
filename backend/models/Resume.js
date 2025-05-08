@@ -16,7 +16,7 @@ const ResumeSchema = mongoose.Schema(
     },
     template: {
       theme: String,
-      colorPlate: [String],
+      colorPalette: [String],
     },
     profileInfo: {
       profilePreviewUrl: String,
@@ -63,7 +63,7 @@ const ResumeSchema = mongoose.Schema(
         liveDemo: String,
       },
     ],
-    certificates: [
+    certifications: [
       {
         title: String,
         issuer: String,
@@ -78,7 +78,7 @@ const ResumeSchema = mongoose.Schema(
     ],
     interests: [String],
   },
-  { timestamps: {createdAt: "createdAt", updatedAt: "updatedAt"} }
+  { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
 module.exports = mongoose.model("Resume", ResumeSchema);
