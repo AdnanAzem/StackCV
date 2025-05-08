@@ -25,7 +25,7 @@ const LandingPage = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex justify-between items-center mb-16">
-          <div className="text-xl font-bold">Resume Builder</div>
+          <div className="text-xl font-bold">StackCV</div>
           {user ? (
             <ProfileInfoCard />
           ) : (

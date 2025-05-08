@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const validateEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
@@ -70,3 +72,8 @@ export const getLightColorFromImage = (imageUrl) => {
     };
   });
 };
+
+// Eg. Mar 2025
+export function formatYearMonth(date){
+  return date ? moment(date,"YYYY-MM").format("MMM YYYY") : "";
+}
