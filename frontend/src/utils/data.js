@@ -52,7 +52,7 @@ export const DUMMY_RESUME_DATA = {
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
   },
   contactInfo: {
-    lacation: "123 Main St, Anytown, USA",
+    location: "123 Main St, Anytown, USA",
     email: "G6v7C@example.com",
     phone: "+1 (123) 456-7890",
     linkedin: "https://www.linkedin.com/in/johndoe",
@@ -83,6 +83,26 @@ export const DUMMY_RESUME_DATA = {
       endDate: "Present",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
+    },
+  ],
+  education:[
+    {
+      degree: "Bachelor's degree",
+      institution: "ABC University",
+      startDate: "2022-01",
+      endDate: "2024-06",
+    },
+    {
+      degree: "Master's degree",
+      institution: "XYZ University",
+      startDate: "2022-01",
+      endDate: "2024-06",
+    },
+    {
+      degree: "PhD",
+      institution: "PQR University",
+      startDate: "2022-01",
+      endDate: "2024-06",
     },
   ],
   skills: [
