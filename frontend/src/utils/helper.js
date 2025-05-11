@@ -1,4 +1,5 @@
 import moment from "moment";
+import html2canvas from "html2canvas";
 
 export const validateEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

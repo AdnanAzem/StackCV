@@ -519,7 +519,25 @@ const EditResume = () => {
   };
 
   const updateResumeDetails = async (thumbnailLink, profilePreviewUrl) => {
-    
+    try {
+      setIsLoading(true);
+
+      const response = await axiosInstance.put(
+        API_PATHS.RESUME.UPDATE(resumeId),
+        {
+          ...resumeData,
+          thumbnailLink: thumbnailLink || "",
+          profileInfo: {
+            ...resumeData.profileInfo,
+            profilePreviewUrl: profilePreviewUrl || "",
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error capturing image:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Delete Resume
@@ -641,6 +659,8 @@ const EditResume = () => {
           </div>
         </div>
       </div>
+
+     
     </DashboardLayout>
   );
 };
