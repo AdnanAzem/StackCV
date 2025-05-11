@@ -25,6 +25,11 @@ import ProjectsDetailsForm from "./Forms/ProjectsDetailsForm";
 import CertificationInfoForm from "./Forms/CertificationInfoForm";
 import AdditionalInfoForm from "./Forms/AdditionalInfoForm";
 import RenderResume from "../../components/ResumeTemplates/RenderResume";
+import {
+  dataURLtoFile,
+  captureElementAsImage,
+  fixTailwindColors,
+} from "../../utils/helper";
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -166,35 +171,47 @@ const EditResume = () => {
         });
         break;
 
-        case "projects":
-          resumeData.projects.forEach(({ title, description }, index) => {
-            if (!title.trim())
-              errors.push(`Project title is required in project ${index + 1}`);
-            if (!description.trim())
-              errors.push(`Project description is required in project ${index + 1}`);
-          });
-          break;
+      case "projects":
+        resumeData.projects.forEach(({ title, description }, index) => {
+          if (!title.trim())
+            errors.push(`Project title is required in project ${index + 1}`);
+          if (!description.trim())
+            errors.push(
+              `Project description is required in project ${index + 1}`
+            );
+        });
+        break;
 
-        case "certifications":
-          resumeData.certifications.forEach(({ title, issuer }, index) => {
-            if (!title.trim())
-              errors.push(`Certification title is required in certification ${index + 1}`);
-            if (!issuer.trim())
-              errors.push(`Certification issuer is required in certification ${index + 1}`);
-          });
-          break;
-          
-        case "additional-info":
-          if (resumeData.languages.length === 0 || !resumeData.languages[0].name?.trim()){
-            errors.push("At least one language is required");
-          }
-          if (resumeData.interests.length === 0 || !resumeData.interests[0]?.trim()){
-            errors.push("At least one interest is required");
-          }
-          break;
+      case "certifications":
+        resumeData.certifications.forEach(({ title, issuer }, index) => {
+          if (!title.trim())
+            errors.push(
+              `Certification title is required in certification ${index + 1}`
+            );
+          if (!issuer.trim())
+            errors.push(
+              `Certification issuer is required in certification ${index + 1}`
+            );
+        });
+        break;
 
-        default:
-          break;
+      case "additional-info":
+        if (
+          resumeData.languages.length === 0 ||
+          !resumeData.languages[0].name?.trim()
+        ) {
+          errors.push("At least one language is required");
+        }
+        if (
+          resumeData.interests.length === 0 ||
+          !resumeData.interests[0]?.trim()
+        ) {
+          errors.push("At least one interest is required");
+        }
+        break;
+
+      default:
+        break;
     }
 
     if (errors.length > 0) {
@@ -455,9 +472,55 @@ const EditResume = () => {
   };
 
   // Upload thumbnail and resume profile img
-  const uploadResumeImages = async () => {};
+  const uploadResumeImages = async () => {
+    try {
+      setIsLoading(true);
 
-  const updateResumeDetails = async (thumbnailLink, profilePreviewUrl) => {};
+      fixTailwindColors(resumeRef.current);
+
+      const imageDataUrl = await captureElementAsImage(resumeRef.current);
+
+      // Convert base64 to File
+      const thumbnailFile = dataURLtoFile(
+        imageDataUrl,
+        `resume-${resumeId}.png`
+      );
+      const profileImageFile = resumeData?.profileInfo?.profileImg || null;
+
+      const formData = new FormData();
+      if (profileImageFile) formData.append("profileImage", profileImageFile);
+      if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+
+      const uploadResponse = await axiosInstance.put(
+        API_PATHS.RESUME.UPLOAD_IMAGES(resumeId),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { thumbnailLink, profilePreviewUrl } = uploadResponse.data;
+
+      console.log("RESUME_DATA__", resumeData);
+
+      // Call the second API to update other resume data
+      await updateResumeDetails(thumbnailLink, profilePreviewUrl);
+
+      toast.success("Resume updated successfully!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      toast.error("Failed to upload images.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateResumeDetails = async (thumbnailLink, profilePreviewUrl) => {
+    
+  };
 
   // Delete Resume
   const handleDeleteResume = async () => {};
@@ -570,11 +633,10 @@ const EditResume = () => {
           <div className="h-[100vh]" ref={resumeRef}>
             {/* Resume Template */}
             <RenderResume
-            templateId={resumeData?.template?.theme || ""}
-            resumeData={resumeData}
-            colorPlatte={resumeData?.template?.colorPalette || ""}
-            containerWidth={baseWidth}
-
+              templateId={resumeData?.template?.theme || ""}
+              resumeData={resumeData}
+              colorPlatte={resumeData?.template?.colorPalette || ""}
+              containerWidth={baseWidth}
             />
           </div>
         </div>
