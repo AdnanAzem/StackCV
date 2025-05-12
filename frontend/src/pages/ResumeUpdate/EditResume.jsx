@@ -544,7 +544,21 @@ const EditResume = () => {
   };
 
   // Delete Resume
-  const handleDeleteResume = async () => {};
+  const handleDeleteResume = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.delete(
+        API_PATHS.RESUME.DELETE(resumeId)
+      );
+      toast.success("Resume deleted successfully!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error deleting resume:", error);
+      // toast.error("Failed to delete resume.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Download Resume
   const reactToPrintFn = useReactToPrint({
