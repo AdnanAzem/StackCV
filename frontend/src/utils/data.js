@@ -52,7 +52,7 @@ export const DUMMY_RESUME_DATA = {
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
   },
   contactInfo: {
-    location: "123 Main St, Anytown, USA",
+    location: "123 Main St, Anytown, USA",    
     email: "G6v7C@example.com",
     phone: "+1 (123) 456-7890",
     linkedin: "https://www.linkedin.com/in/johndoe",
