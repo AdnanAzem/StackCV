@@ -651,13 +651,13 @@ const EditResume = () => {
                   onClick={validateAndNext}
                   disabled={isLoading}
                 >
-                  {currentPage === "additionalInfo" && (
+                  {currentPage === "additional-info" && (
                     <LuDownload className="text-[16px]" />
                   )}
-                  {currentPage === "additionalInfo"
+                  {currentPage === "additional-info"
                     ? "Preview & Download"
                     : "Next"}
-                  {currentPage !== "additionalInfo" && (
+                  {currentPage !== "additional-info" && (
                     <LuArrowLeft className="text-[16px] rotate-180" />
                   )}
                 </button>
