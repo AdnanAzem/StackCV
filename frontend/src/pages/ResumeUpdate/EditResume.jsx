@@ -487,6 +487,7 @@ const EditResume = () => {
         imageDataUrl,
         `resume-${resumeId}.png`
       );
+
       const profileImageFile = resumeData?.profileInfo?.profileImg || null;
 
       const formData = new FormData();
@@ -678,6 +679,24 @@ const EditResume = () => {
             }}
             resumeData={null}
             onClose={() => setOpenThemeSelector(false)}
+          />
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={openPreviewModal}
+        onClose={() => setOpenPreviewModal(false)}
+        title={resumeData.title}
+        showActionBtn
+        actionBtnText={"Download"}
+        actionBtnIcon={<LuDownload className="text-[16px]" />}
+        onActionClick={() => reactToPrintFn()}
+      >
+        <div ref={resumeDownloadRef} className="w-[98vw] h-[90vh]">
+          <RenderResume
+            templateId={resumeData?.template?.theme || ""}
+            resumeData={resumeData}
+            colorPlatte={resumeData?.template?.colorPalette || []}
           />
         </div>
       </Modal>
