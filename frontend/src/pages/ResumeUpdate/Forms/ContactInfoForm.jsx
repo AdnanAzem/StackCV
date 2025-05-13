@@ -57,7 +57,7 @@ const ContactInfoForm = ({contactInfo, updateSection}) => {
                 placeholder="https://www.example.com"
                 type="text"
                 value={contactInfo.website || ""}
-                onChange={(e) => updateSection('portfolio', e.target.value)}
+                onChange={(e) => updateSection('website', e.target.value)}
                 />
             </div>
         </div>

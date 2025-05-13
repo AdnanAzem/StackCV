@@ -6,7 +6,7 @@ import TemplateThree from "./TemplateThree";
 const RenderResume = ({
   templateId,
   resumeData,
-  colorPlatte,
+  colorPalette,
   containerWidth,
 }) => {
   switch (templateId) {
@@ -14,7 +14,7 @@ const RenderResume = ({
       return (
         <TemplateOne
           resumeData={resumeData}
-          colorPlatte={colorPlatte}
+          colorPalette={colorPalette}
           containerWidth={containerWidth}
         />
       );
@@ -23,7 +23,7 @@ const RenderResume = ({
       return (
         <TemplateTwo
           resumeData={resumeData}
-          colorPlatte={colorPlatte}
+          colorPalette={colorPalette}
           containerWidth={containerWidth}
         />
       );
@@ -32,7 +32,7 @@ const RenderResume = ({
       return (
         <TemplateThree
           resumeData={resumeData}
-          colorPlatte={colorPlatte}
+          colorPalette={colorPalette}
           containerWidth={containerWidth}
         />
       );
@@ -41,7 +41,7 @@ const RenderResume = ({
       return (
         <TemplateOne
           resumeData={resumeData}
-          colorPlatte={colorPlatte}
+          colorPalette={colorPalette}
           containerWidth={containerWidth}
         />
       );

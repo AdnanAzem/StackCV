@@ -665,12 +665,13 @@ const EditResume = () => {
             </div>
           </div>
 
-          <div className="h-[100vh]" ref={resumeRef}>
+          <div ref={resumeRef} className="h-[100vh]" >
+            {console.log( "resumeRef",resumeRef)}
             {/* Resume Template */}
             <RenderResume
               templateId={resumeData?.template?.theme || ""}
               resumeData={resumeData}
-              colorPlatte={resumeData?.template?.colorPalette || ""}
+              colorPalette={resumeData?.template?.colorPalette || []}
               containerWidth={baseWidth}
             />
           </div>

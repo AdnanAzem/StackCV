@@ -31,8 +31,8 @@ const Title = ({ text, color }) => {
   );
 };
 
-const TemplateTwo = ({ resumeData, colorPlatte, containerWidth }) => {
-  const themeColors = colorPlatte?.length > 0 ? colorPlatte : DEFAULT_THEME;
+const TemplateTwo = ({ resumeData, colorPalette, containerWidth }) => {
+  const themeColors = colorPalette?.length > 0 ? colorPalette : DEFAULT_THEME;
 
   const resumeRef = useRef(null);
   const [baseWidth, setBaseWidth] = useState(800);

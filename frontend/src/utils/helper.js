@@ -59,7 +59,7 @@ export const getLightColorFromImage = (imageUrl) => {
         }
       }
       if (count === 0) {
-        resolve("ffffff"); // fallback if no bright pixels found
+        resolve("#ffffff"); // fallback if no bright pixels found
       } else {
         r = Math.round(r / count);
         g = Math.round(g / count);
