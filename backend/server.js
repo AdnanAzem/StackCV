@@ -1,15 +1,15 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const connectDB = require("./config/db");
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { connectDB } from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import resumeRoutes from './routes/resumeRoutes.js';
+import { fileURLToPath } from 'url';
 
-import { fileURLToPath } from "url";
 
-const authRoutes = require("./routes/authRoutes");
-const resumeRoutes = require("./routes/resumeRoutes");
 
 const app = express();
 

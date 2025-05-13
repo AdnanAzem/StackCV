@@ -1,10 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const Resume = require("../models/Resume");
-const upload = require("../middlewares/uploadMiddleware");
-const { error } = require("console");
+import fs from 'fs';
+import path from 'path';
+import Resume from '../models/Resume.js';
+import upload from '../middlewares/uploadMiddleware.js';
 
-const uploadResumeImages = async (req, res) => {
+export const uploadResumeImages = async (req, res) => {
   try {
     upload.fields([{ name: "thumbnail" }, { name: "profileImage" }])(
       req,
@@ -79,6 +78,4 @@ const uploadResumeImages = async (req, res) => {
   }
 };
 
-module.exports = {
-  uploadResumeImages,
-};
+

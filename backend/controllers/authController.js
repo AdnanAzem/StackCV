@@ -1,6 +1,9 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
+
 
 // Generate JWT Token
 const generateToken = (userId) => {
@@ -12,7 +15,7 @@ const generateToken = (userId) => {
 // @desc Register a new user
 // @route POST /api/auth/register
 // @access Public
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     try {
         const { name, email, password, profileImageUrl } = req.body;
 
@@ -50,7 +53,7 @@ const registerUser = async (req, res) => {
 // desc Login user
 // @route POST /api/auth/login
 // @access Public
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -81,7 +84,7 @@ const loginUser = async (req, res) => {
 // desc Get user profile
 // @route GET /api/auth/profile
 // @access Private (Require JWT)
-const getUserProfile = async (req, res) => {
+export const getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select("-password");
 
@@ -96,8 +99,8 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-module.exports = {
-    registerUser,
-    loginUser,
-    getUserProfile,
-};
+// module.exports = {
+//     registerUser,
+//     loginUser,
+//     getUserProfile,
+// };

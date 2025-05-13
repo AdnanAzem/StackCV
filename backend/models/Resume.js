@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
-const ResumeSchema = mongoose.Schema(
+const resumeSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -81,4 +81,5 @@ const ResumeSchema = mongoose.Schema(
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-module.exports = mongoose.model("Resume", ResumeSchema);
+const Resume = mongoose.model('Resume', resumeSchema);
+export default Resume;
