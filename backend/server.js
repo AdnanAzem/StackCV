@@ -4,6 +4,8 @@ const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 
+import { fileURLToPath } from "url";
+
 const authRoutes = require("./routes/authRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 
@@ -30,6 +32,19 @@ app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 
 // Serve uploads folder
+// app.use(
+//   "/uploads",
+//   express.static(path.join(__dirname, "uploads"), {
+//     setHeaders: (res, path) => {
+//       res.set("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+//     },
+//   })
+// );
+
+// Get __dirname equivalent in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"), {
