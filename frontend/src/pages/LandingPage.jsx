@@ -24,7 +24,7 @@ function LandingPage() {
     <div className="w-full min-h-full bg-white ">
       <div className="container mx-auto px-4 py-6 xl:px-20">
         <header className="flex justify-between items-center mb-16">
-          <div className="text-xl font-bold">Resume Builder</div>
+          <div className="text-xl font-bold">StackCV</div>
           {user ? (
             <ProfileInfoCard />
           ) : (
