@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { LuCheck, LuPencil } from "react-icons/lu";
+import { useState } from 'react';
+import { LuCheck, LuPencil } from 'react-icons/lu';
 
-const TitleInput = ({ title, setTitle }) => {
+function TitleInput({ title, setTitle }) {
   const [showInput, setShowInput] = useState(false);
-
   return (
     <div className="flex items-center gap-3">
       {showInput ? (
@@ -11,20 +10,20 @@ const TitleInput = ({ title, setTitle }) => {
           <input
             type="text"
             placeholder="Resume title"
-            className="text-sm md:text-[17px] bg-transparent outline-none text-black font-semibold border-b border-gray-300 pb-1"
+            className="text-sm md:text-[17px] bg-transparent outline-none text-black font-semibold border-b border-gray-300 "
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <button className="">
+          <button className="cursor-pointer">
             <LuCheck
-              className="text-[16px] text-purple-600"
+              className="text-base text-purple-600"
               onClick={() => setShowInput((prevState) => !prevState)}
             />
           </button>
         </>
       ) : (
         <>
-          <h2 className="text-sm md:text-[17px] font-semibold">{title}</h2>
+          <h2 className="">{title}</h2>
           <button className="cursor-pointer">
             <LuPencil
               className="text-sm text-purple-600"
@@ -35,6 +34,6 @@ const TitleInput = ({ title, setTitle }) => {
       )}
     </div>
   );
-};
+}
 
 export default TitleInput;

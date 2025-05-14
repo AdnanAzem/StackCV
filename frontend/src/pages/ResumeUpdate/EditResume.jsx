@@ -1,6 +1,11 @@
-import React from "react";
-import { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import DashboardLayout from '../../components/layouts/DashboardLayout';
+import Modal from '../../components/Modal';
+import TitleInput from '../../components/Inputs/TitleInput';
+import { useReactToPrint } from 'react-to-print';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATH } from '../../utils/apiPaths';
 import {
   LuArrowLeft,
   LuCircleAlert,
@@ -8,131 +13,134 @@ import {
   LuPalette,
   LuSave,
   LuTrash2,
-} from "react-icons/lu";
-import toast from "react-hot-toast";
-import DashboardLayout from "../../components/layouts/DashboardLayout";
-import TitleInput from "../../components/Inputs/TitleInput";
-import { useReactToPrint } from "react-to-print";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
-import StepProgress from "../../components/StepProgress";
-import ProfileInfoForm from "./Forms/ProfileInfoForm";
-import ContactInfoForm from "./Forms/ContactInfoForm";
-import WorkExperienceForm from "./Forms/WorkExperienceForm";
-import EducationDetailsForm from "./Forms/EducationDetailsForm";
-import SkillsInfoForm from "./Forms/SkillsInfoForm";
-import ProjectsDetailsForm from "./Forms/ProjectsDetailsForm";
-import CertificationInfoForm from "./Forms/CertificationInfoForm";
-import AdditionalInfoForm from "./Forms/AdditionalInfoForm";
-import RenderResume from "../../components/ResumeTemplates/RenderResume";
-import ThemeSelector from "./ThemeSelector";
-import Modal from "../../components/Modal";
-import {
-  dataURLtoFile,
-  captureElementAsImage,
-  fixTailwindColors,
-} from "../../utils/helper";
+} from 'react-icons/lu';
+import StepProgress from '../../components/StepProgress';
+import ProfileInfoForm from './Forms/ProfileInfoForm';
+import ContactInfoForm from './Forms/ContactInfoForm';
+import WorkExperienceForm from './Forms/WorkExperienceForm';
+import EducationDetailsForm from './Forms/EducationDetailsForm';
+import SkillsInfoForm from './Forms/SkillsInfoForm';
+import ProjectsDetailForm from './Forms/ProjectsDetailForm';
+import CertificationForm from './Forms/CertificationForm';
+import AdditionalInfoForm from './Forms/AdditionalInfoForm';
+import RenderResume from '../../components/ResumeTemplates/RenderResume';
 
-const EditResume = () => {
+import { toast } from 'react-hot-toast';
+import {
+  captureElementAsImage,
+  dataURLtoFile,
+  fixTailwindColors,
+} from '../../utils/helper';
+import ThemeSelector from './ThemeSelector';
+
+function EditResume() {
   const { resumeId } = useParams();
   const navigate = useNavigate();
-
   const resumeRef = useRef(null);
   const resumeDownloadRef = useRef(null);
 
   const [baseWidth, setBaseWidth] = useState(800);
   const [openThemeSelector, setOpenThemeSelector] = useState(false);
   const [openPreviewModal, setOpenPreviewModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("profile-info");
+
+  const [currentPage, setCurrentPage] = useState('profile-info');
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
-    title: "",
-    thumbnailLink: "",
+    title: '',
+    thumbnailLink: '',
     profileInfo: {
       profileImg: null,
-      profilePreviewUrl: "",
-      fullName: "",
-      designation: "",
-      summary: "",
+      profilePreviewUrl: '',
+      fullName: '',
+      designation: '',
+      summary: '',
     },
     template: {
-      theme: "",
-      colorPalette: "",
+      theme: '',
+      colorPalatte: '',
     },
     contactInfo: {
-      email: "",
-      phone: "",
-      location: "",
-      linkedin: "",
-      github: "",
-      website: "",
+      email: '',
+      phone: '',
+      location: '',
+      linkedin: '',
+      github: '',
+      website: '',
     },
     workExperience: [
       {
-        company: "",
-        role: "",
-        startDate: "",
-        endDate: "",
-        description: "",
+        company: '',
+        role: '',
+        startDate: '',
+        endDate: '',
       },
     ],
     education: [
       {
-        degree: "",
-        institution: "",
-        startDate: "",
-        endDate: "",
+        degree: '',
+        institution: '',
+        startDate: '',
+        endDate: '',
       },
     ],
-    skills: [{ name: "", progress: 0 }],
+    skills: [
+      {
+        name: '',
+        progress: '',
+      },
+    ],
     projects: [
       {
-        title: "",
-        description: "",
-        github: "",
-        liveDemo: "",
+        title: '',
+        description: '',
+        github: '',
+        liveDemo: '',
       },
     ],
     certifications: [
       {
-        title: "",
-        issuer: "",
-        year: "",
+        title: '',
+        issuer: '',
+        year: '',
       },
     ],
     languages: [
       {
-        name: "",
+        name: '',
         progress: 0,
       },
     ],
-    interests: [""],
+    interests: [],
   });
 
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Validate Inputs
   const validateAndNext = (e) => {
+    e.preventDefault();
     const errors = [];
 
     switch (currentPage) {
-      case "profile-info":
+      case 'profile-info': {
         const { fullName, designation, summary } = resumeData.profileInfo;
-        if (!fullName.trim()) errors.push("Full Name is required");
-        if (!designation.trim()) errors.push("Designation is required");
-        if (!summary.trim()) errors.push("Summary is required");
+        if (!fullName.trim()) errors.push('Full Name is required');
+        if (!designation.trim()) errors.push('Designation is required');
+        if (!summary.trim()) errors.push('Summary is required');
         break;
+      }
 
-      case "contact-info":
+      case 'contact-info': {
         const { email, phone } = resumeData.contactInfo;
-        if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email))
-          errors.push("Valid Email is required");
-        if (!phone.trim())
-          errors.push("Valid 10-digit Phone Number is required");
-        break;
+        if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+          errors.push('Valid email is required.');
 
-      case "work-experience":
+        if (!phone.trim())
+          errors.push('Valid 10-digit phone number is required');
+        break;
+      }
+
+      case 'work-experience':
         resumeData.workExperience.forEach(
           ({ company, role, startDate, endDate }, index) => {
             if (!company.trim())
@@ -141,13 +149,13 @@ const EditResume = () => {
               errors.push(`Role is required in experience ${index + 1}`);
             if (!startDate || !endDate)
               errors.push(
-                `Start & End Date is required in experience ${index + 1}`
+                `Start and End dates are required in experience ${index + 1}`
               );
           }
         );
         break;
 
-      case "education-info":
+      case 'education-info':
         resumeData.education.forEach(
           ({ degree, institution, startDate, endDate }, index) => {
             if (!degree.trim())
@@ -156,24 +164,24 @@ const EditResume = () => {
               errors.push(`Institution is required in education ${index + 1}`);
             if (!startDate || !endDate)
               errors.push(
-                `Start & End Date is required in education ${index + 1}`
+                `Start and End dates are required in education ${index + 1}`
               );
           }
         );
         break;
 
-      case "skills":
-        resumeData.skills.forEach(({ name }, index) => {
+      case 'skills':
+        resumeData.skills.forEach(({ name, progress }, index) => {
           if (!name.trim())
-            errors.push(`Skill name is required in ${index + 1}`);
+            errors.push(`Skill name is required in skill ${index + 1}`);
           if (progress < 1 || progress > 100)
             errors.push(
-              `Skill progress must be between 1 and 100 in skill ${index + 1}`
+              `Skill progress mus be between 1 and 100 in skill ${index + 1}`
             );
         });
         break;
 
-      case "projects":
+      case 'projects':
         resumeData.projects.forEach(({ title, description }, index) => {
           if (!title.trim())
             errors.push(`Project title is required in project ${index + 1}`);
@@ -184,32 +192,29 @@ const EditResume = () => {
         });
         break;
 
-      case "certifications":
+      case 'certifications':
         resumeData.certifications.forEach(({ title, issuer }, index) => {
           if (!title.trim())
             errors.push(
               `Certification title is required in certification ${index + 1}`
             );
           if (!issuer.trim())
-            errors.push(
-              `Certification issuer is required in certification ${index + 1}`
-            );
+            errors.push(`Issuer is required in certification ${index + 1}`);
         });
         break;
 
-      case "additional-info":
+      case 'additionalInfo':
         if (
           resumeData.languages.length === 0 ||
           !resumeData.languages[0].name?.trim()
-        ) {
-          errors.push("At least one language is required");
-        }
+        )
+          errors.push('At least one language is required');
+
         if (
           resumeData.interests.length === 0 ||
           !resumeData.interests[0]?.trim()
-        ) {
-          errors.push("At least one interest is required");
-        }
+        )
+          errors.push('At least one interest is required');
         break;
 
       default:
@@ -217,161 +222,157 @@ const EditResume = () => {
     }
 
     if (errors.length > 0) {
-      setErrorMsg(errors.join(", "));
+      setErrorMsg(errors.join(', '));
       return;
     }
 
     // Move to next step
-    setErrorMsg("");
+    setErrorMsg('');
     goToNextStep();
   };
 
   // Function to navigate to the next page
   const goToNextStep = () => {
     const pages = [
-      "profile-info",
-      "contact-info",
-      "work-experience",
-      "education-info",
-      "skills",
-      "projects",
-      "certifications",
-      "additional-info",
+      'profile-info',
+      'contact-info',
+      'work-experience',
+      'education-info',
+      'skills',
+      'projects',
+      'certifications',
+      'additionalInfo',
     ];
 
-    if (currentPage === "additional-info") {
-      setOpenPreviewModal(true);
-    }
+    if (currentPage === 'addtionalInfo') setOpenPreviewModal(true);
 
     const currentIndex = pages.indexOf(currentPage);
     if (currentIndex !== -1 && currentIndex < pages.length - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentPage(pages[nextIndex]);
 
-      // Set progress as persentage
+      // Set progress as percentage
       const percent = Math.round((nextIndex / (pages.length - 1)) * 100);
       setProgress(percent);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   // Function to navigate to the previous page
   const goBack = () => {
     const pages = [
-      "profile-info",
-      "contact-info",
-      "work-experience",
-      "education-info",
-      "skills",
-      "projects",
-      "certifications",
-      "additional-info",
+      'profile-info',
+      'contact-info',
+      'work-experience',
+      'education-info',
+      'skills',
+      'projects',
+      'certifications',
+      'additionalInfo',
     ];
 
-    if (currentPage === "additional-info") {
-      navigate("/dashboard");
-    }
+    if (currentPage === 'profile-info') navigate('/dashboard');
 
     const currentIndex = pages.indexOf(currentPage);
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
       setCurrentPage(pages[prevIndex]);
 
-      // Update progress as persentage
+      // Update progress
       const percent = Math.round((prevIndex / (pages.length - 1)) * 100);
       setProgress(percent);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const renderForm = () => {
     switch (currentPage) {
-      case "profile-info":
+      case 'profile-info':
         return (
           <ProfileInfoForm
             profileData={resumeData?.profileInfo}
-            updateSection={(key, value) =>
-              updateSection("profileInfo", key, value)
-            }
-            onNext={validateAndNext}
+            updateSection={(key, value) => {
+              updateSection('profileInfo', key, value);
+            }}
           />
         );
 
-      case "contact-info":
+      case 'contact-info':
         return (
           <ContactInfoForm
             contactInfo={resumeData?.contactInfo}
-            updateSection={(key, value) =>
-              updateSection("contactInfo", key, value)
-            }
+            updateSection={(key, value) => {
+              updateSection('contactInfo', key, value);
+            }}
           />
         );
 
-      case "work-experience":
+      case 'work-experience':
         return (
           <WorkExperienceForm
             workExperience={resumeData?.workExperience}
-            updateArrayItem={(index, key, value) =>
-              updateArrayItem("workExperience", index, key, value)
-            }
-            addArrayItem={(newItem) => addArrayItem("workExperience", newItem)}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem('workExperience', index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem('workExperience', newItem)}
             removeArrayItem={(index) =>
-              removeArrayItem("workExperience", index)
+              removeArrayItem('workExperience', index)
             }
+            // onNext={validateAndNext}
           />
         );
 
-      case "education-info":
+      case 'education-info':
         return (
           <EducationDetailsForm
             educationInfo={resumeData?.education}
-            updateArrayItem={(index, key, value) =>
-              updateArrayItem("education", index, key, value)
-            }
-            addArrayItem={(newItem) => addArrayItem("education", newItem)}
-            removeArrayItem={(index) => removeArrayItem("education", index)}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem('education', index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem('education', newItem)}
+            removeArrayItem={(index) => removeArrayItem('education', index)}
           />
         );
 
-      case "skills":
+      case 'skills':
         return (
           <SkillsInfoForm
             skillsInfo={resumeData?.skills}
-            updateArrayItem={(index, key, value) =>
-              updateArrayItem("skills", index, key, value)
-            }
-            addArrayItem={(newItem) => addArrayItem("skills", newItem)}
-            removeArrayItem={(index) => removeArrayItem("skills", index)}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem('skills', index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem('skills', newItem)}
+            removeArrayItem={(index) => removeArrayItem('skills', index)}
           />
         );
 
-      case "projects":
+      case 'projects':
         return (
-          <ProjectsDetailsForm
+          <ProjectsDetailForm
             projectInfo={resumeData?.projects}
-            updateArrayItem={(index, key, value) =>
-              updateArrayItem("projects", index, key, value)
-            }
-            addArrayItem={(newItem) => addArrayItem("projects", newItem)}
-            removeArrayItem={(index) => removeArrayItem("projects", index)}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem('projects', index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem('projects', newItem)}
+            removeArrayItem={(index) => removeArrayItem('projects', index)}
           />
         );
 
-      case "certifications":
+      case 'certifications':
         return (
-          <CertificationInfoForm
+          <CertificationForm
             certifications={resumeData?.certifications}
-            updateArrayItem={(index, key, value) =>
-              updateArrayItem("certifications", index, key, value)
-            }
-            addArrayItem={(newItem) => addArrayItem("certifications", newItem)}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem('certifications', index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem('certifications', newItem)}
             removeArrayItem={(index) =>
-              removeArrayItem("certifications", index)
+              removeArrayItem('certifications', index)
             }
           />
         );
 
-      case "additional-info":
+      case 'additionalInfo':
         return (
           <AdditionalInfoForm
             languages={resumeData?.languages}
@@ -402,19 +403,20 @@ const EditResume = () => {
     }));
   };
 
-  //Update array item (like workExperience[0], skills[1], etc.)
+  // Update array item (like workExperience[0], skills[1], etc.)
   const updateArrayItem = (section, index, key, value) => {
     setResumeData((prev) => {
       const updatedArray = [...prev[section]];
 
       if (key === null) {
-        updatedArray[index] = value; // for simple strings like in 'interests'
+        updatedArray[index] = value; //for simple strings like in 'interests'
       } else {
         updatedArray[index] = {
           ...updatedArray[index],
           [key]: value,
         };
       }
+
       return {
         ...prev,
         [section]: updatedArray,
@@ -430,7 +432,7 @@ const EditResume = () => {
     }));
   };
 
-  //Remove item from array
+  // Remove item from array
   const removeArrayItem = (section, index) => {
     setResumeData((prev) => {
       const updatedArray = [...prev[section]];
@@ -442,18 +444,18 @@ const EditResume = () => {
     });
   };
 
-  //Fetch resume info by ID
+  // Fetch resume info by ID
   const fetchResumeDetailsById = async () => {
     try {
       const response = await axiosInstance.get(
-        API_PATHS.RESUME.GET_BY_ID(resumeId)
+        API_PATH.RESUME.GET_BY_ID(resumeId)
       );
-
       if (response.data && response.data.profileInfo) {
         const resumeInfo = response.data;
+
         setResumeData((prevState) => ({
           ...prevState,
-          title: resumeInfo?.title || "Untitled",
+          title: resumeInfo?.title || 'Untitled',
           template: resumeInfo?.template || prevState?.template,
           profileInfo: resumeInfo?.profileInfo || prevState?.profileInfo,
           contactInfo: resumeInfo?.contactInfo || prevState?.contactInfo,
@@ -468,18 +470,16 @@ const EditResume = () => {
           interests: resumeInfo?.interests || prevState?.interests,
         }));
       }
-    } catch (error) {
-      console.log("Error fetching resumes:", error);
+    } catch (err) {
+      console.error('Error fetching resumes:', err);
     }
   };
 
-  // Upload thumbnail and resume profile img
+  // upload thumbnail and resume profile img
   const uploadResumeImages = async () => {
     try {
       setIsLoading(true);
-
       fixTailwindColors(resumeRef.current);
-
       const imageDataUrl = await captureElementAsImage(resumeRef.current);
 
       // Convert base64 to File
@@ -488,34 +488,28 @@ const EditResume = () => {
         `resume-${resumeId}.png`
       );
 
-      const profileImageFile = resumeData?.profileInfo?.profileImg || null;
+      const profileImageFile = resumeData?.profileInfo.profileImg || null;
 
       const formData = new FormData();
-      if (profileImageFile) formData.append("profileImage", profileImageFile);
-      if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+      if (profileImageFile) formData.append('profileImage', profileImageFile);
+      if (thumbnailFile) formData.append('thumbnail', thumbnailFile);
 
       const uploadResponse = await axiosInstance.put(
-        API_PATHS.RESUME.UPLOAD_IMAGES(resumeId),
+        API_PATH.RESUME.UPLOAD_IMAGES(resumeId),
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
       const { thumbnailLink, profilePreviewUrl } = uploadResponse.data;
-
-      console.log("RESUME_DATA__", resumeData);
+      console.log('RESUME_DATA__', resumeData);
 
       // Call the second API to update other resume data
       await updateResumeDetails(thumbnailLink, profilePreviewUrl);
-
-      toast.success("Resume updated successfully!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error uploading images:", error);
-      toast.error("Failed to upload images.");
+      toast.success('Resume Updated Successfully');
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Error uploading images:', err);
+      toast.error('Failed to upload images');
     } finally {
       setIsLoading(false);
     }
@@ -524,20 +518,22 @@ const EditResume = () => {
   const updateResumeDetails = async (thumbnailLink, profilePreviewUrl) => {
     try {
       setIsLoading(true);
-
+      // eslint-disable-next-line no-unused-vars
       const response = await axiosInstance.put(
-        API_PATHS.RESUME.UPDATE(resumeId),
+        API_PATH.RESUME.UPDATE(resumeId),
         {
           ...resumeData,
-          thumbnailLink: thumbnailLink || "",
+          thumbnailLink: thumbnailLink || '',
           profileInfo: {
             ...resumeData.profileInfo,
-            profilePreviewUrl: profilePreviewUrl || "",
+            profilePreviewUrl: profilePreviewUrl || '',
           },
         }
       );
+
+      toast.success('Resume Details Updated!');
     } catch (err) {
-      console.error("Error capturing image:", err);
+      console.error('Error capturing image', err);
     } finally {
       setIsLoading(false);
     }
@@ -547,25 +543,23 @@ const EditResume = () => {
   const handleDeleteResume = async () => {
     try {
       setIsLoading(true);
+      // eslint-disable-next-line no-unused-vars
       const response = await axiosInstance.delete(
-        API_PATHS.RESUME.DELETE(resumeId)
+        API_PATH.RESUME.DELETE(resumeId)
       );
-      toast.success("Resume deleted successfully!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error deleting resume:", error);
-      // toast.error("Failed to delete resume.");
+      toast.success('Resume Deleted Successfully!');
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Error capturing image:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
   // Download Resume
-  const reactToPrintFn = useReactToPrint({
-    contentRef: resumeDownloadRef,
-  });
+  const reactToPrintFn = useReactToPrint({ contentRef: resumeDownloadRef });
 
-  // Function to update baseWidth based on the resume container size
+  // Function to update baseWidth based on resume container size
   const updateBaseWidth = () => {
     if (resumeRef.current) {
       setBaseWidth(resumeRef.current.offsetWidth);
@@ -574,13 +568,14 @@ const EditResume = () => {
 
   useEffect(() => {
     updateBaseWidth();
-    window.addEventListener("resize", updateBaseWidth);
+    window.addEventListener('resize', updateBaseWidth);
 
     if (resumeId) {
       fetchResumeDetailsById();
     }
+
     return () => {
-      window.removeEventListener("resize", updateBaseWidth);
+      window.removeEventListener('resize', updateBaseWidth);
     };
   }, []);
 
@@ -591,93 +586,90 @@ const EditResume = () => {
           <TitleInput
             title={resumeData.title}
             setTitle={(value) =>
-              setResumeData((prevState) => ({ ...prevState, title: value }))
+              setResumeData((prevState) => ({
+                ...prevState,
+                title: value,
+              }))
             }
           />
-
           <div className="flex items-center gap-4">
             <button
               className="btn-small-light"
               onClick={() => setOpenThemeSelector(true)}
             >
-              <LuPalette className="text-[16px]" />
+              <LuPalette className="text-base" />
               <span className="hidden md:block">Change Theme</span>
             </button>
             <button className="btn-small-light" onClick={handleDeleteResume}>
-              <LuTrash2 className="text-[16px]" />
-              <span className="">Delete</span>
+              <LuTrash2 className="text-base" />
+              <span className="hidden md:block">Delete</span>
             </button>
             <button
               className="btn-small-light"
               onClick={() => setOpenPreviewModal(true)}
             >
-              <LuDownload className="text-[16px]" />
+              <LuDownload className="text-base" />
               <span className="hidden md:block">Preview & Download</span>
             </button>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ">
           <div className="bg-white rounded-lg border border-purple-100 overflow-hidden">
             <StepProgress progress={progress} />
-
             {renderForm()}
             <div className="mx-5">
               {errorMsg && (
                 <div className="flex items-center gap-2 text-[11px] font-medium text-amber-600 bg-amber-100 px-2 py-0.5 my-1 rounded">
-                  <LuCircleAlert className="text-md" /> {errorMsg}
+                  <LuCircleAlert className="text-base" />
+                  {errorMsg}
                 </div>
               )}
-              <div className="flex items-center justify-end gap-3 mt-3 mb-5">
+              <div className="flex items-end justify-end gap-3 mt-3 mb-5">
                 <button
                   className="btn-small-light"
                   onClick={goBack}
                   disabled={isLoading}
                 >
-                  <LuArrowLeft className="text-[16px]" /> Back
+                  <LuArrowLeft className="text-base" />
+                  Back
                 </button>
-
                 <button
                   className="btn-small-light"
                   onClick={uploadResumeImages}
                   disabled={isLoading}
                 >
-                  <LuSave className="text-[16px]" />{" "}
-                  {isLoading ? "Updating..." : "Save & Exit"}
+                  <LuSave className="text-base" />
+                  {isLoading ? 'Updating...' : 'Save & Exit'}
                 </button>
-
                 <button
                   className="btn-small"
                   onClick={validateAndNext}
                   disabled={isLoading}
                 >
-                  {currentPage === "additional-info" && (
-                    <LuDownload className="text-[16px]" />
+                  {currentPage === 'additionalInfo' && (
+                    <LuDownload className="text-base" />
                   )}
-                  {currentPage === "additional-info"
-                    ? "Preview & Download"
-                    : "Next"}
-                  {currentPage !== "additional-info" && (
-                    <LuArrowLeft className="text-[16px] rotate-180" />
+                  {currentPage === 'addtionalInfo'
+                    ? 'Preview & Download'
+                    : 'Next'}
+                  {currentPage !== 'addtionalInfo' && (
+                    <LuArrowLeft className="text-base rotate-180" />
                   )}
                 </button>
               </div>
             </div>
           </div>
-
-          <div ref={resumeRef} className="h-[100vh]" >
-            {console.log( "resumeRef",resumeRef)}
+          <div ref={resumeRef} className="h-[100vh]">
             {/* Resume Template */}
             <RenderResume
-              templateId={resumeData?.template?.theme || ""}
+              templateId={resumeData?.template?.theme || ''}
               resumeData={resumeData}
-              colorPalette={resumeData?.template?.colorPalette || []}
+              colorPalatte={resumeData?.template?.colorPalatte || ''}
               containerWidth={baseWidth}
             />
           </div>
         </div>
       </div>
-
       <Modal
         isOpen={openThemeSelector}
         onClose={() => setOpenThemeSelector(false)}
@@ -692,31 +684,30 @@ const EditResume = () => {
                 template: value || prevState.template,
               }));
             }}
-            resumeData={null}
+            resumeData={resumeData}
             onClose={() => setOpenThemeSelector(false)}
           />
         </div>
       </Modal>
-
       <Modal
         isOpen={openPreviewModal}
         onClose={() => setOpenPreviewModal(false)}
         title={resumeData.title}
         showActionBtn
-        actionBtnText={"Download"}
-        actionBtnIcon={<LuDownload className="text-[16px]" />}
+        actionBtnText="Download"
+        actionBtnIcon={<LuDownload className="text-base" />}
         onActionClick={() => reactToPrintFn()}
       >
         <div ref={resumeDownloadRef} className="w-[98vw] h-[90vh]">
           <RenderResume
-            templateId={resumeData?.template?.theme || ""}
+            templateId={resumeData?.template?.theme || ''}
             resumeData={resumeData}
-            colorPlatte={resumeData?.template?.colorPalette || []}
+            colorPalatte={resumeData?.template?.colorPalatte}
           />
         </div>
       </Modal>
     </DashboardLayout>
   );
-};
+}
 
 export default EditResume;

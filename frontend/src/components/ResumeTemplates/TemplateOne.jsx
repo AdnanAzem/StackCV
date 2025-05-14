@@ -1,25 +1,25 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
-  LuMapPinHouse,
+  LuGithub,
   LuMail,
+  LuMapPinHouse,
   LuPhone,
   LuRss,
-  LuGithub,
   LuUser,
-} from "react-icons/lu";
-import { RiLinkedinLine } from "react-icons/ri";
-import ContactInfo from "../ResumeSections/ContactInfo";
-import EducationInfo from "../ResumeSections/EducationInfo";
-import { formatYearMonth } from "../../utils/helper";
-import LanguagesSection from "../ResumeSections/LanguagesSection";
-import WorkExperience from "../ResumeSections/WorkExperience";
-import ProjectInfo from "../ResumeSections/ProjectInfo";
-import SkillsSection from "../ResumeSections/SkillsSection";
-import CertificationInfo from "../ResumeSections/CertificationInfo";
+} from 'react-icons/lu';
+import { RiLinkedinLine } from 'react-icons/ri';
+import ContactInfo from '../ResumeSections/ContactInfo';
+import EducationInfo from '../ResumeSections/EducationInfo';
+import { formatYearMonth } from '../../utils/helper';
+import LanguageSection from '../ResumeSections/LanguageSection';
+import WorkExperience from '../ResumeSections/WorkExperience';
+import ProjectInfo from '../ResumeSections/ProjectInfo';
+import SkillSection from '../ResumeSections/SkillSection';
+import CertificationsInfo from '../ResumeSections/CertificationsInfo';
 
-const DEFAULT_THEME = ["#EBFDFF", "#A1F4FD", "#CEFAFE", "#00B8DB", "#4A5565"];
+const DEFAULT_THEME = ['#EBFDFF', '#A1F4FD', '#CEFAFE', '#00B8DB', '#4A5565'];
 
-const Title = ({ text, color }) => {
+function Title({ text, color }) {
   return (
     <div className="relative w-fit mb-2.5">
       <span
@@ -29,55 +29,50 @@ const Title = ({ text, color }) => {
       <h2 className={`relative text-sm font-bold`}>{text}</h2>
     </div>
   );
-};
+}
 
-const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
-  const themeColors = colorPalette?.length > 0 ? colorPalette : DEFAULT_THEME;
+function TemplateOne({ resumeData, colorPalatte, containerWidth }) {
+  const themeColors = colorPalatte?.length > 0 ? colorPalatte : DEFAULT_THEME;
 
   const resumeRef = useRef(null);
-  const [baseWidth, setBaseWidth] = useState(800);
+  const [baseWidth, setBaseWidth] = useState(800); // default value
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
     // Calculate the scale factor based on the container width
     const actualBaseWidth = resumeRef.current.offsetWidth;
-    setBaseWidth(actualBaseWidth); // Get the actual base width
+    setBaseWidth(actualBaseWidth); //Get the actual base width
     setScale(containerWidth / baseWidth);
   }, [containerWidth]);
-
   return (
     <div
       ref={resumeRef}
       className="p-3 bg-white"
       style={{
-        transform: containerWidth > 0 ? `scale(${scale})` : "none",
-        transformOrigin: "top left",
-        width: containerWidth > 0 ? `${baseWidth}px` : "auto", // Keep the original size so scaling works correctly
-        height: "auto",
+        transform: containerWidth > 0 ? `scale(${scale})` : 'none',
+        transformOrigin: 'top left',
+        width: containerWidth > 0 ? `${baseWidth}px` : 'auto',
+        height: 'auto',
       }}
     >
       <div className="grid grid-cols-12 gap-8">
         <div
           className="col-span-4 py-10"
-          style={{
-            backgroundColor: themeColors[0],
-          }}
+          style={{ backgroundColor: themeColors[0] }}
         >
           <div className="flex flex-col items-center px-2">
             <div
               className="w-[100px] h-[100px] max-w-[110px] max-h-[110px] rounded-full flex items-center justify-center"
-              style={{
-                backgroundColor: themeColors[1],
-              }}
+              style={{ backgroundColor: themeColors[1] }}
             >
-              {resumeData.profileInfo.profilePreviewUrl ? (
+              {resumeData?.profileInfo.profilePreviewUrl ? (
                 <img
                   src={resumeData.profileInfo.profilePreviewUrl}
-                  className="w-[90px] h-[90px] rounded-full"
+                  className="w-[90px] h-[90px] rounded-full object-cover"
                 />
               ) : (
                 <div
-                  className="w-[90px] h-[90px]  flex items-center justify-center text-5xl rounded-full"
+                  className="w-[90px] h-[90px] flex items-center justify-center text-5xl rounded-full"
                   style={{ color: themeColors[4] }}
                 >
                   <LuUser />
@@ -85,29 +80,25 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
               )}
             </div>
 
-            <h2 className="text-lg font-bold mt-3">
+            <h2 className="text-xl font-bold mt-3">
               {resumeData.profileInfo.fullName}
             </h2>
             <p className="text-sm text-center">
               {resumeData.profileInfo.designation}
             </p>
           </div>
-
           <div className="my-6 mx-6">
-            {/* Contact Section */}
             <div className="flex flex-col gap-4">
               <ContactInfo
                 icon={<LuMapPinHouse />}
                 iconBG={themeColors[2]}
                 value={resumeData.contactInfo.location}
               />
-
               <ContactInfo
                 icon={<LuMail />}
                 iconBG={themeColors[2]}
                 value={resumeData.contactInfo.email}
               />
-
               <ContactInfo
                 icon={<LuPhone />}
                 iconBG={themeColors[2]}
@@ -137,10 +128,8 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
               />
             </div>
 
-            {/* Education Section */}
             <div className="mt-5">
               <Title text="Education" color={themeColors[1]} />
-
               {resumeData.education.map((data, index) => (
                 <EducationInfo
                   key={`education_${index}`}
@@ -153,11 +142,9 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
               ))}
             </div>
 
-            {/* Languages Section */}
             <div className="mt-5">
               <Title text="Languages" color={themeColors[1]} />
-
-              <LanguagesSection
+              <LanguageSection
                 languages={resumeData.languages}
                 accentColor={themeColors[3]}
                 bgColor={themeColors[2]}
@@ -165,17 +152,13 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
             </div>
           </div>
         </div>
-
         <div className="col-span-8 pt-10 mr-10 pb-5">
-          {/* Professional Summary Section */}
           <div>
             <Title text="Professional Summary" color={themeColors[1]} />
             <p className="text-sm font-medium">
               {resumeData.profileInfo.summary}
             </p>
           </div>
-
-          {/* Work Experience Section*/}
           <div className="mt-4">
             <Title text="Work Experience" color={themeColors[1]} />
 
@@ -193,7 +176,6 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
             ))}
           </div>
 
-          {/* Projects Section */}
           <div className="mt-4">
             <Title text="Projects" color={themeColors[1]} />
 
@@ -203,64 +185,62 @@ const TemplateOne = ({ resumeData, colorPalette, containerWidth }) => {
                 title={project.title}
                 description={project.description}
                 githubLink={project.github}
-                liveDemoUrl={project.liveDemo}
+                liveDemo={project.liveDemo}
                 bgColor={themeColors[2]}
               />
             ))}
           </div>
 
-          {/* Skills Section */}
           <div className="mt-4">
             <Title text="Skills" color={themeColors[1]} />
-            <SkillsSection
+
+            <SkillSection
               skills={resumeData.skills}
               accentColor={themeColors[3]}
               bgColor={themeColors[2]}
             />
           </div>
 
-          {/* Certifications Section */}
           <div className="mt-4">
             <Title text="Certifications" color={themeColors[1]} />
 
             <div className="grid grid-cols-2 gap-2">
-              {resumeData.certifications.map((cert, index) => (
-                <CertificationInfo
+              {resumeData.certifications.map((certification, index) => (
+                <CertificationsInfo
                   key={`cert_${index}`}
-                  title={cert.title}
-                  issuer={cert.issuer}
-                  year={cert.year}
+                  title={certification.title}
+                  issuer={certification.issuer}
+                  year={certification.year}
                   bgColor={themeColors[2]}
                 />
               ))}
             </div>
           </div>
 
-          {/* Interests Section */}
-          {resumeData.interests.length > 0 && resumeData.interests[0] != "" && (
-            <div className="mt-4">
-              <Title text="Interests" color={themeColors[1]} />
-
-              <div className="flex items-center flex-wrap gap-3 mt-4">
-                {resumeData.interests.map((interest, index) => {
-                  if (!interest) return null;
-                  return (
-                    <div
-                      key={`interest_${index}`}
-                      className="text-[10px] font-medium py-1 px-3 rounded-lg"
-                      style={{ backgroundColor: themeColors[2] }}
-                    >
-                      {interest}
-                    </div>
-                  );
-                })}
+          {resumeData.interests.length > 0 &&
+            resumeData.interests[0] !== '' && (
+              <div className="mt-4">
+                <Title text="Interests" color={themeColors[1]} />
+                <div className="flex items-center flex-wrap gap-3 mt-4">
+                  {resumeData.interests.map((interest, index) => {
+                    if (!interest) return null;
+                    return (
+                      <div
+                        key={`interest_${index}`}
+                        className="text-[10px] font-medium py-1 px-3 rounded-lg"
+                        style={{ backgroundColor: themeColors[2] }}
+                      >
+                        {interest}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default TemplateOne;

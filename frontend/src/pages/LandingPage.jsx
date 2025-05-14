@@ -1,31 +1,30 @@
-import React, { useContext, useState } from "react";
-import HERO_IMG from "../assets/hero-img.png";
-import { useNavigate } from "react-router-dom";
-import Login from "./Auth/Login";
-import SignUp from "./Auth/SignUp";
-import Modal from "../components/Modal";
-import ProfileInfoCard from "../components/Cards/ProfileInfoCard";
-import { UserContext } from "../context/userContext";
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Login from './Auth/Login';
+import SignUp from './Auth/SignUp';
+import Modal from '../components/Modal';
+import { UserContext } from '../context/UserContext';
+import ProfileInfoCard from '../components/Cards/ProfileInfoCard';
 
-const LandingPage = () => {
+function LandingPage() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [openAuthModal, setOpenAuthModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState("login");
+  const [currentPage, setCurrentPage] = useState('login');
 
-  const handleCTA = () => {
-    if(!user){
+  function handleCTA() {
+    if (!user) {
       setOpenAuthModal(true);
+    } else {
+      navigate('/dashboard');
     }
-    navigate("/dashboard");
-  };
+  }
 
   return (
-    <div className="w-full min-h-full bg-white">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
+    <div className="w-full min-h-full bg-white ">
+      <div className="container mx-auto px-4 py-6 xl:px-20">
         <header className="flex justify-between items-center mb-16">
-          <div className="text-xl font-bold">StackCV</div>
+          <div className="text-xl font-bold">Resume Builder</div>
           {user ? (
             <ProfileInfoCard />
           ) : (
@@ -37,17 +36,18 @@ const LandingPage = () => {
             </button>
           )}
         </header>
+
         {/* Hero Content */}
         <div className="flex flex-col md:flex-row items-center">
-          <div className="w-full md:w-1/2 pr-4 mb-8 md:mb-0">
+          <div className="w-full md:w-1/2 pr-4 mb-8 md:md-0">
             <h1 className="text-5xl font-bold mb-6 leading-tight">
-              Build Your{" "}
-              <span className="text-transparent bg-clip-text bg-[radial-gradient(circle,_#7182ff_0%,_#ecff52_100%)] bg-[length:200%_200%] animate-text-shine">
+              Build Your{' '}
+              <span className="text-transparent bg-clip-text bg-[radial-gradient(circle,_#7182ff_0%,_#3cff52_100%)] bg-[length:200%_200%] animate-text-shine">
                 Resume Effortlessly
               </span>
             </h1>
             <p className="text-lg text-gray-700 mb-8">
-              Craft a standout resume in minutes, with our smart and intuitive
+              Craft a standout resume in minutes with our smart and intuitive
               resume builder.
             </p>
             <button
@@ -57,13 +57,7 @@ const LandingPage = () => {
               Get Started
             </button>
           </div>
-          <div className="w-full md:w-1/2">
-            <img
-              src={HERO_IMG}
-              alt="Hero Image"
-              className="w-full rounded-lg"
-            />
-          </div>
+          <div className="w-full md:w-1/2"></div>
         </div>
 
         <section className="mt-5">
@@ -83,43 +77,45 @@ const LandingPage = () => {
                 Beautiful Templates
               </h3>
               <p className="text-gray-600">
-                Choose from modern, professional templates that are easy to
+                {' '}
+                Choose from modern professional templates that are east to
                 customize.
               </p>
             </div>
-
             <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition">
               <h3 className="text-lg font-semibold mb-3">One-Click Export</h3>
               <p className="text-gray-600">
-                Download your resume instantly as high-quality PDF with one
+                Download your resume instantly as a high-quality PDF with one
                 click.
               </p>
             </div>
           </div>
         </section>
-      </div>
 
-      <div className="text-sm bg-gray-50 text-secondary text-center p-5 mt-5">
-        Made with ❤️... by Happy Coding
-      </div>
-
-      <Modal
-        isOpen={openAuthModal}
-        onClose={() => {
-          setOpenAuthModal(false);
-          setCurrentPage("login");
-        }}
-        hideHeader
-      >
-        <div>
-          {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
-          {currentPage === "signUp" && (
-            <SignUp setCurrentPage={setCurrentPage} />
-          )}
+        <div className="text-sm bg-gray-50 text-secondary text-center p-5 mt-5 ">
+          Made with ❤️... Happy Coding
         </div>
-      </Modal>
+
+        <Modal
+          isOpen={openAuthModal}
+          onClose={() => {
+            setOpenAuthModal(false);
+            setCurrentPage('login');
+          }}
+          hideHeader
+        >
+          <div className="">
+            {currentPage === 'login' && (
+              <Login setCurrentPage={setCurrentPage} />
+            )}
+            {currentPage === 'signup' && (
+              <SignUp setCurrentPage={setCurrentPage} />
+            )}
+          </div>
+        </Modal>
+      </div>
     </div>
   );
-};
+}
 
 export default LandingPage;

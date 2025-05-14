@@ -1,61 +1,51 @@
 import { LuPlus, LuTrash2 } from 'react-icons/lu';
 import Input from '../../../components/Inputs/Input';
 
-function EducationDetailsForm({
-  educationInfo,
+function CertificationForm({
+  certifications,
   updateArrayItem,
   addArrayItem,
   removeArrayItem,
 }) {
   return (
-    <div className="px-5 pt-5">
-      <h2 className="text-lg font-semibold text-gray-900">Education</h2>
+    <div className="pt-5 px-5">
+      <h2 className="text-lg font-semibold text-gray-900">Certifications</h2>
       <div className="mt-4 flex flex-col gap-4 mb-3">
-        {educationInfo?.map((education, index) => (
+        {certifications.map((cert, index) => (
           <div
             key={index}
             className="border border-gray-200/80 p-4 rounded-lg relative"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                label="Degree"
-                placeholder="B.Sc in Computer Science"
+                label="Certificate Title"
+                placeholder="Fullstack Web Developer"
                 type="text"
-                value={education.degree || ''}
+                value={cert.title || ''}
                 onChange={(e) =>
-                  updateArrayItem(index, 'degree', e.target.value)
+                  updateArrayItem(index, 'title', e.target.value)
                 }
               />
-
               <Input
-                label="Institution"
-                placeholder="XYZ University"
+                label="Issuer"
+                placeholder="Coursera / Google / etc."
                 type="text"
-                value={education.institution || ''}
+                value={cert.issuer || ''}
                 onChange={(e) =>
-                  updateArrayItem(index, 'institution', e.target.value)
+                  updateArrayItem(index, 'issuer', e.target.value)
                 }
               />
 
               <Input
-                label="Start Date"
-                type="month"
-                value={education.startDate || ''}
-                onChange={(e) =>
-                  updateArrayItem(index, 'startDate', e.target.value)
-                }
-              />
-
-              <Input
-                label="End Date"
-                type="month"
-                value={education.endDate || ''}
-                onChange={(e) =>
-                  updateArrayItem(index, 'endDate', e.target.value)
-                }
+                label="Year"
+                placeholder="2024"
+                type="text"
+                value={cert.year || ''}
+                onChange={(e) => updateArrayItem(index, 'year', e.target.value)}
               />
             </div>
-            {educationInfo?.length > 1 && (
+
+            {certifications.length > 1 && (
               <button
                 type="button"
                 className="absolute top-3 right-3 text-sm text-red-600 hover:underline cursor-pointer"
@@ -71,18 +61,17 @@ function EducationDetailsForm({
           className="self-start flex items-center gap-2 px-4 py-2 rounded bg-purple-100 text-purple-800 text-sm font-medium hover:bg-purple-200 cursor-pointer"
           onClick={() =>
             addArrayItem({
-              degree: '',
-              institution: '',
-              startDate: '',
-              endDate: '',
+              title: '',
+              issuer: '',
+              year: '',
             })
           }
         >
-          <LuPlus /> Add Education
+          <LuPlus /> Add Certificate
         </button>
       </div>
     </div>
   );
 }
 
-export default EducationDetailsForm;
+export default CertificationForm;
