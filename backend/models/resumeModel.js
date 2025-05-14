@@ -4,7 +4,7 @@ const resumeSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     title: {
@@ -16,7 +16,7 @@ const resumeSchema = new mongoose.Schema(
     },
     template: {
       theme: String,
-      colorPalette: [String],
+      colorPalatte: [String],
     },
     profileInfo: {
       profilePreviewUrl: String,
@@ -78,8 +78,14 @@ const resumeSchema = new mongoose.Schema(
     ],
     interests: [String],
   },
-  { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
+  {
+    timestamps: {
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+    },
+  }
 );
 
 const Resume = mongoose.model('Resume', resumeSchema);
+
 export default Resume;
