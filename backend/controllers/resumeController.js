@@ -77,6 +77,8 @@ const createResume = async (req, res) => {
       title,
       ...defaultTemplateData,
     });
+
+    await newResume.save();
     res.status(201).json(newResume);
   } catch (error) {
     res
@@ -169,7 +171,7 @@ const deleteResume = async (req, res) => {
     }
 
     //Delete thumbnailLink and profilePreviewUrl images from uploads folder
-    const uploadsFolder = path.join(__dirname, "..", "uploads");
+    const uploadsFolder = path.dirname("..", "uploads");
     const baseUrl = `${req.protocol}://${req.get("host")}`;
 
     if (resume.thumbnailLink) {

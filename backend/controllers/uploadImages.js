@@ -26,7 +26,9 @@ export const uploadResumeImages = async (req, res) => {
             .json({ message: "Resume not found or unauthorized" });
         }
 
-        const uploadsFolder = path.join(__dirname, "..", "uploads");
+        // const uploadsFolder = path.join(__dirname, "..", "uploads");
+        const uploadsFolder = path.join(process.cwd(), 'uploads');
+        
         const baseUrl = `${req.protocol}://${req.get("host")}`;
 
         const newThumbnail = req.files.thumbnail?.[0];
