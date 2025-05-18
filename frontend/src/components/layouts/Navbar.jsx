@@ -7,7 +7,7 @@ function Navbar({ activeMenu }) {
       <div className="container mx-auto flex items-center justify-between gap-5">
         <Link to="/dashboard">
           <h2 className="text-lg md:text-xl font-medium text-black leading-5">
-            Resume Builder
+            StackCV
           </h2>
         </Link>
         <ProfileInfoCard />
