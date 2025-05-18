@@ -177,7 +177,7 @@ const deleteResume = async (req, res) => {
 
     // Delete thumbnailLink and profilePreviewLink images from uploads folder
     const uploadsFolder = path.dirname("..", "uploads");
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const baseUrl = `${req.protocol}s://${req.get("host")}`;
 
     if (resume.thumbnailLink) {
       const oldThumbnail = path.join(
